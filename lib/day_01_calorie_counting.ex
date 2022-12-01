@@ -1,7 +1,7 @@
 defmodule Adventofcode.Day01CalorieCounting do
   use Adventofcode
 
-  alias __MODULE__.{Parser, Part1, State}
+  alias __MODULE__.{Parser, Part1, Part2, State}
 
   def part_1(input) do
     input
@@ -9,13 +9,11 @@ defmodule Adventofcode.Day01CalorieCounting do
     |> Part1.solve()
   end
 
-  # def part_2(input) do
-  #   input
-  #   |> Parser.parse()
-  #   |> State.new
-  #   |> Part2.solve()
-  # end
-  #
+  def part_2(input) do
+    input
+    |> Parser.parse()
+    |> Part2.solve()
+  end
 
   defmodule Part1 do
     def solve(state) do
@@ -25,11 +23,16 @@ defmodule Adventofcode.Day01CalorieCounting do
     end
   end
 
-  # defmodule Part2 do
-  #   def solve(state) do
-  #     state
-  #   end
-  # end
+  defmodule Part2 do
+    def solve(state) do
+      state
+      |> Enum.map(&Enum.sum/1)
+      |> Enum.sort
+      |> Enum.reverse
+      |> Enum.take(3)
+      |> Enum.sum
+    end
+  end
 
   defmodule Parser do
     def parse(input) do
