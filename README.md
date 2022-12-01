@@ -1,6 +1,6 @@
-# Advent of Code 2021 Elixir
+# Advent of Code 2022 Elixir
 
-Solutions for Advent of Code 2020 written in Elixir.
+Solutions for Advent of Code 2022 written in Elixir.
 
 ## What to do every day
 
@@ -10,7 +10,7 @@ Solutions for Advent of Code 2020 written in Elixir.
 1. Code and test until done!
 1. `git commit -p -v -e -m "Add Day00SomeModule"`
 1. `git push`
-1. Update submodule https://github.com/kodsnack/advent_of_code_2021
+1. Update submodule https://github.com/kodsnack/advent_of_code_2022
 
 ## Usage
 
