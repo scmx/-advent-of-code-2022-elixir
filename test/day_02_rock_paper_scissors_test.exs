@@ -11,17 +11,10 @@ defmodule Adventofcode.Day02RockPaperScissorsTest do
   C Z
   """
 
-  # @example2"""
-  # """
-
   describe "part_1/1" do
     test "In this example, if you were to follow the strategy guide, you would get a total score of 15 (8 + 1 + 6)" do
       assert 15 = @example |> part_1()
     end
-
-    # test "" do
-    #   assert 1337 = @example2 |> part_1()
-    # end
 
     test_with_puzzle_input do
       assert 8392 = puzzle_input() |> part_1()
@@ -29,17 +22,13 @@ defmodule Adventofcode.Day02RockPaperScissorsTest do
   end
 
   describe "part_2/1" do
-    # test "" do
-    #   assert 1337 = @example |> part_2()
-    # end
+    test "" do
+      assert 12 = @example |> part_2()
+    end
 
-    # test "" do
-    #   assert 1337 = @example2 |> part_2()
-    # end
-
-    # test_with_puzzle_input do
-    #   assert 1337 = puzzle_input() |> part_2()
-    # end
+    test_with_puzzle_input do
+      assert 10116 = puzzle_input() |> part_2()
+    end
   end
 
   describe "Parser.parse/1" do
