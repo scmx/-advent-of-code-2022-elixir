@@ -1,21 +1,11 @@
 defmodule Adventofcode.Day03RucksackReorganization do
   use Adventofcode
 
-  alias __MODULE__.{Parser, Part1, State}
+  alias __MODULE__.{Parser, Part1, Part2, State}
 
-  def part_1(input) do
-    input
-    |> Parser.parse()
-    |> Part1.solve()
-  end
+  def part_1(input), do: input |> Parser.parse |> Part1.solve
 
-  # def part_2(input) do
-  #   input
-  #   |> Parser.parse()
-  #   |> State.new
-  #   |> Part2.solve()
-  # end
-  #
+  def part_2(input), do: input |> Parser.parse |> Part2.solve
 
   defmodule Part1 do
     def solve(input) do
@@ -31,8 +21,9 @@ defmodule Adventofcode.Day03RucksackReorganization do
       [MapSet.new(Enum.slice(line, 0, half)), MapSet.new(Enum.slice(line, half, half))]
     end
 
-    defp compare([half1, half2]) do
-      MapSet.intersection(half1, half2)
+    def compare(parts) do
+      parts
+      |> Enum.reduce(&MapSet.intersection/2)
       |> Enum.to_list
     end
 
@@ -42,15 +33,20 @@ defmodule Adventofcode.Day03RucksackReorganization do
       |> Enum.sum
     end
 
-    defp offset(char) when char >= 97, do: char - ?a + 1
-    defp offset(char), do: char - ?A + 27
+    def offset(char) when char >= 97, do: char - ?a + 1
+    def offset(char), do: char - ?A + 27
   end
 
-  # defmodule Part2 do
-  #   def solve(state) do
-  #     state
-  #   end
-  # end
+  defmodule Part2 do
+    def solve(input) do
+      input
+      |> Enum.map(&MapSet.new/1)
+      |> Enum.chunk_every(3)
+      |> Enum.flat_map(&Part1.compare/1)
+      |> Enum.map(&Part1.offset/1)
+      |> Enum.sum
+    end
+  end
 
   defmodule Parser do
     def parse(input) do
