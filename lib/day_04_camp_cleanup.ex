@@ -1,7 +1,7 @@
 defmodule Adventofcode.Day04CampCleanup do
   use Adventofcode
 
-  alias __MODULE__.{Parser, Part1, State}
+  alias __MODULE__.{Parser, Part1, Part2}
 
   def part_1(input) do
     input
@@ -9,19 +9,10 @@ defmodule Adventofcode.Day04CampCleanup do
     |> Part1.solve()
   end
 
-  # def part_2(input) do
-  #   input
-  #   |> Parser.parse()
-  #   |> State.new
-  #   |> Part2.solve()
-  # end
-  #
-
-  defmodule State do
-    @enforce_keys []
-    defstruct pos: {0, 0}
-
-    def new(_data), do: %__MODULE__{}
+  def part_2(input) do
+    input
+    |> Parser.parse()
+    |> Part2.solve()
   end
 
   defmodule Part1 do
@@ -40,11 +31,13 @@ defmodule Adventofcode.Day04CampCleanup do
     end
   end
 
-  # defmodule Part2 do
-  #   def solve(state) do
-  #     state
-  #   end
-  # end
+  defmodule Part2 do
+    def solve(pairs) do
+      pairs
+      |> Enum.reject(&Range.disjoint?(Enum.at(&1, 0), Enum.at(&1, 1)))
+      |> Enum.count
+    end
+  end
 
   defmodule Parser do
     def parse(input) do

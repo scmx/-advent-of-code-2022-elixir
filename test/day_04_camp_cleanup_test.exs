@@ -14,17 +14,10 @@ defmodule Adventofcode.Day04CampCleanupTest do
   2-6,4-8
   """
 
-  # @example2"""
-  # """
-
   describe "part_1/1" do
     test "how many assignment pairs does one range fully contain the other?" do
       assert 2 = @example |> part_1()
     end
-
-    # test "" do
-    #   assert 1337 = @example2 |> part_1()
-    # end
 
     test_with_puzzle_input do
       assert 511 = puzzle_input() |> part_1()
@@ -32,17 +25,13 @@ defmodule Adventofcode.Day04CampCleanupTest do
   end
 
   describe "part_2/1" do
-    # test "" do
-    #   assert 1337 = @example |> part_2()
-    # end
+    test "" do
+      assert 4 = @example |> part_2()
+    end
 
-    # test "" do
-    #   assert 1337 = @example2 |> part_2()
-    # end
-
-    # test_with_puzzle_input do
-    #   assert 1337 = puzzle_input() |> part_2()
-    # end
+    test_with_puzzle_input do
+      assert 821 = puzzle_input() |> part_2()
+    end
   end
 
   describe "Parser.parse/1" do
