@@ -25,7 +25,7 @@ defmodule Adventofcode.Day04CampCleanupTest do
   end
 
   describe "part_2/1" do
-    test "" do
+    test "in this example, the number of overlapping assignment pairs is 4" do
       assert 4 = @example |> part_2()
     end
 

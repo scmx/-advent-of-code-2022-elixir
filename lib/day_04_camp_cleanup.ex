@@ -23,20 +23,18 @@ defmodule Adventofcode.Day04CampCleanup do
     end
 
     defp one_fully_contain_other?([a1..a2, b1..b2]) do
-      cond do
-        a1 >= b1 && a2 <= b2 -> true
-        b1 >= a1 && b2 <= a2 -> true
-        true -> false
-      end
+      (a1 >= b1 && a2 <= b2) || (b1 >= a1 && b2 <= a2)
     end
   end
 
   defmodule Part2 do
     def solve(pairs) do
       pairs
-      |> Enum.reject(&Range.disjoint?(Enum.at(&1, 0), Enum.at(&1, 1)))
+      |> Enum.reject(&disjoint?/1)
       |> Enum.count
     end
+
+    defp disjoint?([a,b]), do: Range.disjoint?(a, b)
   end
 
   defmodule Parser do
