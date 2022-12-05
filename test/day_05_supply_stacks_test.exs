@@ -25,27 +25,19 @@ defmodule Adventofcode.Day05SupplyStacksTest do
       assert "CMZ" = @example |> part_1()
     end
 
-    # test "" do
-    #   assert 1337 = @example2 |> part_1()
-    # end
-
     test_with_puzzle_input do
       assert "ZSQVCCJLL" = puzzle_input() |> part_1()
     end
   end
 
   describe "part_2/1" do
-    # test "" do
-    #   assert 1337 = @example |> part_2()
-    # end
+    test "the CrateMover 9001 has put the crates in a totally different order: MCD" do
+      assert "MCD" = @example |> part_2()
+    end
 
-    # test "" do
-    #   assert 1337 = @example2 |> part_2()
-    # end
-
-    # test_with_puzzle_input do
-    #   assert 1337 = puzzle_input() |> part_2()
-    # end
+    test_with_puzzle_input do
+      assert "QZFJRWHGS" = puzzle_input() |> part_2()
+    end
   end
 
   describe "Parser.parse/1" do

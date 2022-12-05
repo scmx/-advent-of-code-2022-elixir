@@ -1,7 +1,7 @@
 defmodule Adventofcode.Day05SupplyStacks do
   use Adventofcode, trim: false
 
-  alias __MODULE__.{Parser, Part1, State}
+  alias __MODULE__.{Parser, Part1, Part2}
 
   def part_1(input) do
     input
@@ -9,19 +9,10 @@ defmodule Adventofcode.Day05SupplyStacks do
     |> Part1.solve()
   end
 
-  # def part_2(input) do
-  #   input
-  #   |> Parser.parse()
-  #   |> State.new
-  #   |> Part2.solve()
-  # end
-  #
-
-  defmodule State do
-    @enforce_keys []
-    defstruct pos: {0, 0}
-
-    def new(_data), do: %__MODULE__{}
+  def part_2(input) do
+    input
+    |> Parser.parse()
+    |> Part2.solve()
   end
 
   defmodule Part1 do
@@ -32,7 +23,7 @@ defmodule Adventofcode.Day05SupplyStacks do
       |> Enum.join("")
     end
 
-    defp move([0, from, to], crates), do: crates
+    defp move([0, _, _], crates), do: crates
     defp move([count, from, to], crates) do
       [head | tail] = Enum.at(crates, from - 1)
       crates = List.update_at(crates, from - 1, fn _ -> tail end)
@@ -41,11 +32,20 @@ defmodule Adventofcode.Day05SupplyStacks do
     end
   end
 
-  # defmodule Part2 do
-  #   def solve(state) do
-  #     state
-  #   end
-  # end
+  defmodule Part2 do
+    def solve([crates, moves]) do
+      moves
+      |> Enum.reduce(crates, &move/2)
+      |> Enum.map(&hd/1)
+      |> Enum.join("")
+    end
+
+    defp move([count, from, to], crates) do
+      {head, tail} = crates |> Enum.at(from - 1) |> Enum.split(count)
+      crates = List.update_at(crates, from - 1, fn _ -> tail end)
+      List.update_at(crates, to - 1, &(head ++ &1))
+    end
+  end
 
   defmodule Parser do
     def parse(input) do
