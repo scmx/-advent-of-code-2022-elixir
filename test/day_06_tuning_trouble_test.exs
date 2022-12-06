@@ -3,8 +3,6 @@ defmodule Adventofcode.Day06TuningTroubleTest do
 
   import Adventofcode.Day06TuningTrouble
 
-  alias Adventofcode.Day06TuningTrouble.{Parser}
-
   @example "mjqjpqmgbljsphdztnvjfqwrcgsmlb"
 
   # @example2"""
@@ -25,17 +23,17 @@ defmodule Adventofcode.Day06TuningTroubleTest do
   end
 
   describe "part_2/1" do
-    # test "" do
-    #   assert 1337 = @example |> part_2()
-    # end
+    test "" do
+      assert 1337 = @example |> part_2()
+    end
 
     # test "" do
     #   assert 1337 = @example2 |> part_2()
     # end
 
-    # test_with_puzzle_input do
-    #   assert 1337 = puzzle_input() |> part_2()
-    # end
+    test_with_puzzle_input do
+      assert 1337 = puzzle_input() |> part_2()
+    end
   end
 
   # describe "Parser.parse/1" do

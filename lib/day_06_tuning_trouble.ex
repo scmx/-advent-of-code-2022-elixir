@@ -1,44 +1,38 @@
 defmodule Adventofcode.Day06TuningTrouble do
   use Adventofcode
 
-  alias __MODULE__.{Parser, Part1, State}
+  alias __MODULE__.{Parser, Part1, Part2}
 
   def part_1(input) do
     input
     |> Parser.parse()
-    |> Part1.solve()
+    |> Part1.solve(4)
   end
 
-  # def part_2(input) do
-  #   input
-  #   |> Parser.parse()
-  #   |> State.new
-  #   |> Part2.solve()
-  # end
-  #
-
-  defmodule State do
-    @enforce_keys []
-    defstruct pos: {0, 0}
-
-    def new(_data), do: %__MODULE__{}
-  end
+   def part_2(input) do
+     input
+     |> Parser.parse()
+     |> Part2.solve()
+   end
 
   defmodule Part1 do
-    def solve(chars = [head | tail], received \\ 4) do
+    def solve(chars, size), do: solve(chars, size, size)
+
+    def solve(chars = [_ | tail], size, received) do
       chars
-      |> Enum.take(4)
+      |> Enum.take(size)
       |> MapSet.new
       |> Enum.to_list
-      |> then(fn set when length(set) == 4 -> received; _ -> solve(tail, received + 1) end)
+      |> then(fn set when length(set) == size -> received; _ -> solve(tail, size, received + 1) end)
     end
   end
 
-  # defmodule Part2 do
-  #   def solve(state) do
-  #     state
-  #   end
-  # end
+  defmodule Part2 do
+    def solve(state) do
+      state
+      |> Part1.solve(14)
+    end
+  end
 
   defmodule Parser do
     def parse(input) do
