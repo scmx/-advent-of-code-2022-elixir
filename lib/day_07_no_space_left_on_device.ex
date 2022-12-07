@@ -1,20 +1,24 @@
 defmodule Adventofcode.Day07NoSpaceLeftOnDevice do
   use Adventofcode
 
-  alias __MODULE__.{Parser, Part1, Pwd, State}
+  alias __MODULE__.{Parser, Part1, Part2, Pwd, State}
 
   def part_1(input) do
     input
     |> Parser.parse()
     |> Part1.solve()
+    |> then(&(&1.folder_sizes))
+    |> Map.values
+    |> Enum.filter(&(&1 <= 100000))
+    |> Enum.sum
   end
 
-  # def part_2(input) do
-  #   input
-  #   |> Parser.parse()
-  #   |> State.new
-  #   |> Part2.solve()
-  # end
+  def part_2(input) do
+    input
+    |> Parser.parse()
+    |> Part1.solve()
+    |> Part2.solve()
+  end
   
   # defmodule Folder do
   #   @enforce_keys [:name]
@@ -70,7 +74,7 @@ defmodule Adventofcode.Day07NoSpaceLeftOnDevice do
 
     defp do_find_folder_size({pwd, size}) do
       case Pwd.up(pwd) do
-        "/" -> []
+        "/" -> [{"/", size}]
         rest -> [{rest, size} | do_find_folder_size({rest, size})]
       end
     end
@@ -99,10 +103,6 @@ defmodule Adventofcode.Day07NoSpaceLeftOnDevice do
       state
       |> Enum.reduce(State.new, &reduce/2)
       |> State.find_folder_sizes
-      |> then(&(&1.folder_sizes))
-      |> Map.values
-      |> Enum.filter(&(&1 <= 100000))
-      |> Enum.sum
     end
 
     defp reduce("$ " <> cmd, acc) do
@@ -126,11 +126,16 @@ defmodule Adventofcode.Day07NoSpaceLeftOnDevice do
     defp run("ls", acc), do: acc
   end
 
-  # defmodule Part2 do
-  #   def solve(state) do
-  #     state
-  #   end
-  # end
+  defmodule Part2 do
+    def solve(state) do
+      target = 30000000 - 70000000 + state.folder_sizes["/"]
+      state.folder_sizes
+      |> Map.values
+      |> Enum.filter(&(&1 >= target))
+      |> Enum.sort
+      |> hd
+    end
+  end
 
   defmodule Parser do
     def parse(input) do

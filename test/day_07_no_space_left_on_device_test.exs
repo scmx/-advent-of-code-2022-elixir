@@ -29,17 +29,10 @@ defmodule Adventofcode.Day07NoSpaceLeftOnDeviceTest do
   7214296 k
   """
 
-  # @example2"""
-  # """
-
   describe "part_1/1" do
     test "" do
       assert 95437 = @example |> part_1()
     end
-
-    # test "" do
-    #   assert 1337 = @example2 |> part_1()
-    # end
 
     test_with_puzzle_input do
       assert 1297159 = puzzle_input() |> part_1()
@@ -47,16 +40,12 @@ defmodule Adventofcode.Day07NoSpaceLeftOnDeviceTest do
   end
 
   describe "part_2/1" do
-    # test "" do
-    #   assert 1337 = @example |> part_2()
-    # end
+    test "" do
+      assert 24933642 = @example |> part_2()
+    end
 
-    # test "" do
-    #   assert 1337 = @example2 |> part_2()
-    # end
-
-    # test_with_puzzle_input do
-    #   assert 1337 = puzzle_input() |> part_2()
-    # end
+    test_with_puzzle_input do
+      assert 3866390 = puzzle_input() |> part_2()
+    end
   end
 end
