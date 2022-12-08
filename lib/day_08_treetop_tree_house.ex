@@ -1,7 +1,7 @@
 defmodule Adventofcode.Day08TreetopTreeHouse do
   use Adventofcode
 
-  alias __MODULE__.{Parser, Part1, State}
+  alias __MODULE__.{Parser, Part1, Part2, State}
 
   def part_1(input) do
     input
@@ -10,13 +10,12 @@ defmodule Adventofcode.Day08TreetopTreeHouse do
     |> Part1.solve()
   end
 
-  # def part_2(input) do
-  #   input
-  #   |> Parser.parse()
-  #   |> State.new
-  #   |> Part2.solve()
-  # end
-  #
+  def part_2(input) do
+    input
+    |> Parser.parse()
+    |> State.new
+    |> Part2.solve()
+  end
 
   defmodule State do
     @enforce_keys [:grid, :max]
@@ -47,18 +46,37 @@ defmodule Adventofcode.Day08TreetopTreeHouse do
         Enum.max(Enum.map((px + 1)..max.x, &state.grid[{&1, py}])),
       ], &(&1 < val))
     end
-
-    defp same_row_or_column({x, y}, {x, y}), do: false
-    defp same_row_or_column({x, _}, {x, _}), do: true
-    defp same_row_or_column({_, y}, {_, y}), do: true
-    defp same_row_or_column(_, _), do: false
   end
 
-  # defmodule Part2 do
-  #   def solve(state) do
-  #     state
-  #   end
-  # end
+  defmodule Part2 do
+    def solve(state) do
+      state.grid
+      |> Enum.map(fn {pos, val} -> {pos, count_visible(state, pos, val)} end)
+      |> Map.new
+      |> Map.values
+      |> Enum.max
+    end
+
+    defp count_visible(state = %{max: max}, {px,py} = pos, val) do
+      [
+        do_count(state, pos, val, py..0, &{px, &1}),
+        do_count(state, pos, val, py..max.y, &{px, &1}),
+        do_count(state, pos, val, px..0, &{&1, py}),
+        do_count(state, pos, val, px..max.x, &{&1, py}),
+      ] |> Enum.reduce(&(&1 * &2))
+    end
+
+    defp do_count(state, pos, val, range, fun_get_pos) do
+      range
+      |> Enum.map(fun_get_pos)
+      |> Enum.reject(&(&1 == pos))
+      |> Enum.map(&state.grid[&1])
+      |> Enum.reduce_while(0, &count(&1, val, &2))
+    end
+
+    defp count(tree, house, acc) when tree >= house, do: {:halt, acc + 1}
+    defp count(_tree, _house, acc), do: {:cont, acc + 1}
+  end
 
   defmodule Parser do
     def parse(input) do
@@ -71,9 +89,9 @@ defmodule Adventofcode.Day08TreetopTreeHouse do
 
     defp parse_line({line, y}) do
       line
-      |> to_char_list
+      |> to_charlist
       |> Enum.with_index
-      |> Enum.map(fn {val, x} -> {{x, y}, val} end)
+      |> Enum.map(fn {val, x} -> {{x, y}, val - ?0} end)
     end
   end
 end
