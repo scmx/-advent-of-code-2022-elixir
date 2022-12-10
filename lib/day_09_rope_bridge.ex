@@ -35,6 +35,7 @@ defmodule Adventofcode.Day09RopeBridge do
       dir
       |> List.duplicate(steps)
       |> Enum.reduce(state, &move_head/2)
+      # |> Printer.print
     end
 
     defp move_head(dir, state = %{knots: [head | tail]}) do
@@ -88,5 +89,26 @@ defmodule Adventofcode.Day09RopeBridge do
     defp parse_dir("L"), do: {-1, 0}
     defp parse_dir("R"), do: {1, 0}
     defp parse_dir("D"), do: {0, 1}
+  end
+
+  defmodule Printer do
+    def print(state) do
+      xr = -10..10
+      yr = -10..10
+      IO.puts("")
+      Enum.map_join(yr, "\n", fn y ->
+        Enum.map_join(xr, "", fn x ->
+          index = Enum.find_index(state.knots, &(&1 == {x, y}))
+          cond do
+            index == 0 -> "H"
+            index in 1..9 -> index
+            MapSet.member?(state.visited, {x, y}) -> "#"
+            :else -> "."
+          end
+        end)
+      end)
+      |> IO.puts
+      state
+    end
   end
 end
