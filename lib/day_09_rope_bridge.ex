@@ -1,89 +1,75 @@
 defmodule Adventofcode.Day09RopeBridge do
   use Adventofcode
 
-  alias __MODULE__.{Parser, Part1, State}
+  alias __MODULE__.{Parser, Part1, Printer, State}
 
   def part_1(input) do
     input
     |> Parser.parse()
-    |> Part1.solve()
+    |> Part1.solve(2)
   end
 
-  # def part_2(input) do
-  #   input
-  #   |> Parser.parse()
-  #   |> State.new
-  #   |> Part2.solve()
-  # end
-  #
+   def part_2(input) do
+     input
+     |> Parser.parse()
+     |> Part1.solve(10)
+   end
 
   defmodule State do
-    @enforce_keys []
-    defstruct head: {0, 0}, tail: {0, 0}, tail_visited: MapSet.new([{0, 0}])
+    @enforce_keys [:knots]
+    defstruct knots: [], visited: MapSet.new([{0, 0}])
 
-    def new, do: %__MODULE__{}
+    def new(knot_count) do 
+      %__MODULE__{knots: List.duplicate({0, 0}, knot_count)}
+    end
   end
 
   defmodule Part1 do
-    def solve(instructions, state \\ State.new) do
-      instructions
-      |> Enum.reduce(state, &move/2)
-      |> print
-      |> then(&MapSet.size(&1.tail_visited))
+    def solve(instruction, knot_count) do
+      instruction
+      |> Enum.reduce(State.new(knot_count), &apply_instruction/2)
+      |> then(&MapSet.size(&1.visited))
     end
 
-    defp move({_dir, 0}, state), do: state
-    defp move({dir, steps}, state) do
-      # print(state)
-      head = move_pos(state.head, dir)
-      tail = follow(head, state.tail)
-      tail_visited = MapSet.put(state.tail_visited, tail)
-      state = %{state | head: head, tail: tail, tail_visited: tail_visited}
-      move({dir, steps - 1}, state)
+    defp apply_instruction({dir, steps}, state) do
+      dir
+      |> List.duplicate(steps)
+      |> Enum.reduce(state, &move_head/2)
     end
 
-    defp move_pos({x, y}, {xd, yd}), do: {x + xd, y + yd}
-
-    defp follow({xh, yh}, {xt, yt} = tail) do
-      case {abs(xh - xt), abs(yh - yt)} do
-        {0, 1} -> tail
-        {1, 0} -> tail
-        {1, 1} -> tail
-        _ -> tail |> move_pos({abs_1(xh - xt), abs_1(yh - yt)})
-      end
+    defp move_head(dir, state = %{knots: [head | tail]}) do
+      head
+      |> add_pos(dir)
+      |> move_tail(tail)
+      |> update_state(state)
     end
 
-    defp abs_1(0), do: 0
-    defp abs_1(n), do: div(n, abs(n))
-
-    defp print(state) do
-      visited = state.tail_visited
-      # [xl, yl] = state.tail_visited |> Enum.map(&Tuple.to_list/1) |> Enum.zip_with(& &1)
-      # xr = Enum.min(xl)..Enum.max(xl)
-      # yr = Enum.min(yl)..Enum.max(yl)
-      xr = -10..10
-      yr = -10..10
-      IO.puts("")
-      Enum.map_join(yr, "\n", fn x ->
-        Enum.map_join(xr, "", fn y ->
-          cond do
-            {x, y} == state.head -> "H"
-            {x, y} == state.tail -> "T"
-            MapSet.member?(visited, {x, y}) -> "#"
-            :else -> "."
-          end
-        end)
-      end)
-      |> IO.puts
-      state
+    defp move_tail(head, tail) do
+      {head, Enum.map_reduce(tail, head, &move_knot/2)}
     end
+
+    defp move_knot(knot, last) do
+      last
+      |> sub_pos(knot)
+      |> follow
+      |> add_pos(knot)
+      |> then(&{&1, &1})
+    end
+
+    defp update_state({head, {tail, last}}, state) do
+      %{state | knots: [head | tail], visited: MapSet.put(state.visited, last)}
+    end
+
+    defp add_pos({x1, y1}, {x2, y2}), do: {x1 + x2, y1 + y2}
+
+    defp sub_pos({x1, y1}, {x2, y2}), do: {x1 - x2, y1 - y2}
+
+    defp follow({xd, yd}) when abs(xd) <= 1 and abs(yd) <= 1, do: {0, 0}
+    defp follow({xd, yd}), do: {clamp(xd), clamp(yd)}
+
+    defp clamp(0), do: 0
+    defp clamp(n), do: div(n, abs(n))
   end
-
-  # defmodule Part2 do
-  #   def solve(state) do
-  #     state
-  #   end
-  # end
 
   defmodule Parser do
     def parse(input) do
