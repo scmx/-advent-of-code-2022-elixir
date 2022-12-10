@@ -175,23 +175,46 @@ defmodule Adventofcode.Day10CathodeRayTubeTest do
   end
 
   describe "part_2/1" do
-    # test "" do
-    #   assert 1337 = @example |> part_2()
-    # end
+    test "" do
+      expected = """
+      ##..##..##..##..##..##..##..##..##..##..
+      ###...###...###...###...###...###...###.
+      ####....####....####....####....####....
+      #####.....#####.....#####.....#####.....
+      ######......######......######......####
+      #######.......#######.......#######.....
+      """
+      actual = @example2 |> part_2()
+      assert expected == actual, """
+      expected
+      #{expected}
+      actual
+      #{actual}
+      """
+    end
 
-    # test "" do
-    #   assert 1337 = @example2 |> part_2()
-    # end
-
-    # test_with_puzzle_input do
-    #   assert 1337 = puzzle_input() |> part_2()
-    # end
+    test_with_puzzle_input do
+      expected = """
+      ###..###..###...##..###...##...##..####.
+      #..#.#..#.#..#.#..#.#..#.#..#.#..#.#....
+      #..#.###..#..#.#..#.#..#.#..#.#....###..
+      ###..#..#.###..####.###..####.#.##.#....
+      #.#..#..#.#....#..#.#.#..#..#.#..#.#....
+      #..#.###..#....#..#.#..#.#..#..###.#....
+      """
+      actual = puzzle_input() |> part_2()
+      assert expected == actual, """
+      expected
+      #{expected}
+      actual
+      #{actual}
+      """
+    end
   end
 
-  @tag :skip
   describe "Parser.parse/1" do
     test "parses input" do
-      assert [1337] = @example |> Parser.parse()
+      assert [:noop, :noop, {:addx, 3}, :noop, {:addx, -5}] = @example |> Parser.parse()
     end
   end
 end
