@@ -46,23 +46,23 @@ defmodule Adventofcode.Day11MonkeyInTheMiddleTest do
   end
 
   describe "part_2/1" do
-    # test "" do
-    #   assert 1337 = @example |> part_2()
-    # end
+    test "" do
+      assert 2713310158 = @example |> part_2()
+    end
 
-    # test "" do
-    #   assert 1337 = @example2 |> part_2()
-    # end
-
-    # test_with_puzzle_input do
-    #   assert 1337 = puzzle_input() |> part_2()
-    # end
+    test_with_puzzle_input do
+      assert 15333249714 = puzzle_input() |> part_2()
+    end
   end
 
   describe "Parser.parse/1" do
-    @tag :skip
     test "parses input" do
-      assert [1337] = @example |> Parser.parse()
+      assert [
+              %{items: [79, 98], operator: :*, factor: 19, divisor: 23, target1: 2, target2: 3},
+              %{items: [54, 65, 75, 74], operator: :+, factor: 6, divisor: 19, target1: 2, target2: 0},
+              %{items: [79, 60, 97], operator: :*, factor: :old, divisor: 13, target1: 1, target2: 3},
+              %{items: [74], operator: :+, factor: 3, divisor: 17, target1: 0, target2: 1}
+      ] = @example |> Parser.parse() |> Map.values
     end
   end
 end

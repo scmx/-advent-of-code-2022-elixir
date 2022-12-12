@@ -6,28 +6,29 @@ defmodule Adventofcode.Day11MonkeyInTheMiddle do
   def part_1(input) do
     input
     |> Parser.parse()
-    |> State.new
-    |> Part1.solve()
-    |> then(&Map.values(&1.monkeys))
-    |> Enum.sort_by(&(&1.inspections), :desc)
-    |> Enum.take(2)
-    |> Enum.map(&(&1.inspections))
-    |> Enum.reduce(&Kernel.*/2)
+    |> State.new_part1
+    |> Part1.solve(20)
   end
 
-  # def part_2(input) do
-  #   input
-  #   |> Parser.parse()
-  #   |> State.new
-  #   |> Part2.solve()
-  # end
-  #
+  def part_2(input) do
+    input
+    |> Parser.parse()
+    |> State.new_part2
+    |> Part1.solve(10000)
+  end
 
   defmodule State do
-    @enforce_keys [:monkeys]
-    defstruct round: 0, monkeys: []
+    @enforce_keys [:monkeys, :relief]
+    defstruct round: 0, monkeys: [], divisor: 3, relief: nil
 
-    def new(monkeys), do: %__MODULE__{monkeys: monkeys}
+    def new_part1(monkeys) do 
+      %__MODULE__{monkeys: monkeys, relief: &div(&1, 3)}
+    end
+
+    def new_part2(monkeys) do 
+      lcm = monkeys |> Map.values |> Enum.map(&(&1.divisor)) |> Enum.product
+      %__MODULE__{monkeys: monkeys, relief: &rem(&1, lcm)}
+    end
   end
 
   defmodule Monkey do
@@ -43,10 +44,15 @@ defmodule Adventofcode.Day11MonkeyInTheMiddle do
   end
 
   defmodule Part1 do
-    def solve(state) do
+    def solve(state, rounds) do
       state
       |> Stream.iterate(&solve_round/1)
-      |> Enum.at(20)
+      |> Enum.at(rounds)
+      |> then(&Map.values(&1.monkeys))
+      |> Enum.sort_by(&(&1.inspections), :desc)
+      |> Enum.take(2)
+      |> Enum.map(&(&1.inspections))
+      |> Enum.reduce(&Kernel.*/2)
     end
     def solve_round(state) do
       state.monkeys
@@ -67,19 +73,13 @@ defmodule Adventofcode.Day11MonkeyInTheMiddle do
       m = state.monkeys[index]
       factor = if m.factor == :old, do: old, else: m.factor
       new = apply(Kernel, m.operator, [old, factor])
-      level = div(new, 3)
+      level = state.relief.(new)
       id = if rem(level, m.divisor) == 0, do: m.target1, else: m.target2
       m2 = state.monkeys[id]
       m2 = %{m2 | items: m2.items ++ [level]}
       %{state | monkeys: Map.put(state.monkeys, id, m2)}
     end
   end
-
-  # defmodule Part2 do
-  #   def solve(state) do
-  #     state
-  #   end
-  # end
 
   defmodule Parser do
     def parse(input) do
